@@ -8,7 +8,6 @@ Then open http://localhost:5555
 import http.server
 import json
 import subprocess
-import html
 import sys
 import os
 import struct
