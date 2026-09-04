@@ -21,7 +21,7 @@ import struct
 import glob
 
 from utils import is_pid_supported
-from models.legion_pro7_16iax10h import KEYBOARD_KEYS, PERIMETER_KEYS, ZONES
+from models.legion_pro7_16iax10h import ZONES, MODEL
 
 # ---------------------------------------------------------------------------
 # HID constants
@@ -567,8 +567,8 @@ def main():
             print(f"Brightness: {get_brightness(dev)}/9")
             print(f"Profile:    {get_profile(dev)}")
             print(f"Logo:       {'on' if get_logo_status(dev) else 'off'}")
-            print(f"Keyboard:   {len(KEYBOARD_KEYS)} keys")
-            print(f"Perimeter:  {len(PERIMETER_KEYS)} LEDs")
+            print(f"Keyboard:   {len(MODEL.keys_in_zone('keyboard'))} keys")
+            print(f"Perimeter:  {len(MODEL.keys_in_zone('perimeter'))} LEDs")
 
         elif cmd == 'preset':
             # preset EFFECT [zone1 zone2 ...] [color1 color2 ...] [--speed N] [--dir DIR]
