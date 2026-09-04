@@ -1,0 +1,1 @@
+HARDWARE_CODES = ['C195', 'C197']
