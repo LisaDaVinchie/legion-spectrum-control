@@ -16,7 +16,7 @@ import fcntl
 import glob as globmod
 import threading
 
-from constants import SUPPORTED_PIDS
+from utils import is_pid_supported
 
 PORT = 5555
 SCRIPT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'spectrum-ctl.py')
@@ -44,9 +44,9 @@ def _find_spectrum_hid():
             if '048D' not in uevent.upper():
                 continue
 
-            for pid in SUPPORTED_PIDS:
-                if pid not in uevent.upper():
-                    continue
+            if not is_pid_supported(uevent):
+                continue
+
             with open(f'{hidraw}/device/report_descriptor', 'rb') as f:
                 desc = f.read()
             if b'\x06\x89\xff' in desc:
