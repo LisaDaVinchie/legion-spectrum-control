@@ -20,7 +20,7 @@ import array
 import struct
 import glob
 
-from constants import HARDWARE_CODE
+from constants import SUPPORTED_PIDS
 
 # ---------------------------------------------------------------------------
 # HID constants
@@ -134,8 +134,12 @@ def find_spectrum_device():
         try:
             with open(f'{hidraw}/device/uevent') as f:
                 uevent = f.read()
-            if '048D' not in uevent.upper() or HARDWARE_CODE not in uevent.upper():
+            if '048D' not in uevent.upper():
                 continue
+
+            for pid in SUPPORTED_PIDS:
+                if pid not in uevent.upper():
+                    continue
             with open(f'{hidraw}/device/report_descriptor', 'rb') as f:
                 desc = f.read()
             if b'\x06\x89\xff' in desc:
