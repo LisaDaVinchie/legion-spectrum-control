@@ -16,6 +16,8 @@ import fcntl
 import glob as globmod
 import threading
 
+from constants import HARDWARE_CODE
+
 PORT = 5555
 SCRIPT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'spectrum-ctl.py')
 
@@ -39,7 +41,7 @@ def _find_spectrum_hid():
         try:
             with open(f'{hidraw}/device/uevent') as f:
                 uevent = f.read()
-            if '048D' not in uevent.upper() or 'C197' not in uevent.upper():
+            if '048D' not in uevent.upper() or HARDWARE_CODE not in uevent.upper():
                 continue
             with open(f'{hidraw}/device/report_descriptor', 'rb') as f:
                 desc = f.read()
