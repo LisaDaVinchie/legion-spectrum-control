@@ -1,0 +1,26 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "spectrum-ctl (sudo)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/spectrum-ctl.py",
+      "console": "integratedTerminal",
+      "args": ["status"],
+      "justMyCode": true,
+      "preLaunchTask": "",
+      "python": "/usr/bin/python3",
+      "sudo": true
+    },
+    {
+      "name": "spectrum-web (sudo)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/spectrum-web.py",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "python": "/usr/bin/python3"
+    }
+  ]
+}
