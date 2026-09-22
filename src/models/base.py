@@ -97,10 +97,10 @@ class KeyboardModel:
         return {k.code: k for k in self.keys}
 
     @cached_property
-    def zones(self) -> frozenset[str]:
+    def zones(self) -> dict[str]:
         """Which zone names this specific model actually has. Use this
         instead of assuming any zone (even 'logo') exists universally."""
-        return frozenset(k.zone for k in self.keys)
+        return {k.zone for k in self.keys}
 
     # -- convenience accessors ------------------------------------------------
 
