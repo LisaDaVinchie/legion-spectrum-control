@@ -406,15 +406,7 @@ QUICK PRESETS:
 
 KEY_NAMES = keyboard_model.by_code
 
-# WASD group
-KEY_GROUPS = {
-    'wasd': ['w', 'a', 's', 'd'],
-    'arrows': ['up', 'down', 'left', 'right'],
-    'numpad': ['numlock', 'numdiv', 'nummul', 'numsub', 'num7', 'num8', 'num9',
-               'numadd', 'num4', 'num5', 'num6', 'num1', 'num2', 'num3',
-               'num0', 'numdot', 'numenter'],
-    'fkeys': ['f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9', 'f10', 'f11', 'f12'],
-}
+KEY_GROUPS = MODEL.zones
 
 
 def resolve_key(name):
