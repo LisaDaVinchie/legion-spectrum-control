@@ -1,9 +1,13 @@
 import os
 import glob
+import fcntl
+import array
 
 from src.constants import SUPPORTED_PIDS
 
 REPORT_SIZE = 960
+HIDIOCSFEATURE = lambda size: 0xC0004806 | (size << 16)
+HIDIOCGFEATURE = lambda size: 0xC0004807 | (size << 16)
 
 def is_pid_supported(uevent: str) -> bool:
     """Check if the machine PID is in the supported list
