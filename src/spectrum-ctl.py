@@ -22,6 +22,9 @@ import glob
 
 from utils import is_pid_supported
 from models.legion_pro7_16iax10h import ZONES, MODEL
+from models import get_model_for_detected_pid
+
+keyboard_model = get_model_for_detected_pid('C197')
 
 # ---------------------------------------------------------------------------
 # HID constants
@@ -401,39 +404,7 @@ QUICK PRESETS:
   stealth                         All lights completely off
 """)
 
-
-# Key name mapping (common keys)
-KEY_NAMES = {
-    'esc': 0x0001, 'f1': 0x0002, 'f2': 0x0003, 'f3': 0x0004,
-    'f4': 0x0005, 'f5': 0x0006, 'f6': 0x0007, 'f7': 0x0008,
-    'f8': 0x0009, 'f9': 0x000a, 'f10': 0x000b, 'f11': 0x000c,
-    'f12': 0x000d, 'prtsc': 0x000e, 'insert': 0x000f, 'delete': 0x0010,
-    'home': 0x0011, 'end': 0x0012, 'pgup': 0x0013, 'pgdn': 0x0014,
-    'tilde': 0x0016, '1': 0x0017, '2': 0x0018, '3': 0x0019,
-    '4': 0x001a, '5': 0x001b, '6': 0x001c, '7': 0x001d,
-    '8': 0x001e, '9': 0x001f, '0': 0x0020, 'minus': 0x0021,
-    'equals': 0x0022, 'backspace': 0x0038,
-    'numlock': 0x0026, 'numdiv': 0x0027, 'nummul': 0x0028, 'numsub': 0x0029,
-    'tab': 0x0040, 'q': 0x0042, 'w': 0x0043, 'e': 0x0044,
-    'r': 0x0045, 't': 0x0046, 'y': 0x0047, 'u': 0x0048,
-    'i': 0x0049, 'o': 0x004a, 'p': 0x004b, 'lbracket': 0x004c,
-    'rbracket': 0x004d, 'backslash': 0x004e,
-    'num7': 0x004f, 'num8': 0x0050, 'num9': 0x0051, 'numadd': 0x0068,
-    'caps': 0x0055, 'a': 0x006d, 's': 0x006e, 'd': 0x0058,
-    'f': 0x0059, 'g': 0x005a, 'h': 0x0071, 'j': 0x0072,
-    'k': 0x005b, 'l': 0x005c, 'semicolon': 0x005d, 'quote': 0x005f,
-    'num4': 0x0079, 'num5': 0x007b, 'num6': 0x007c,
-    'lshift': 0x01f5, 'z': 0x006a, 'x': 0x0082, 'c': 0x0083,
-    'v': 0x006f, 'b': 0x0070, 'n': 0x0087, 'm': 0x0088,
-    'comma': 0x0073, 'period': 0x0074, 'slash': 0x0075,
-    'rshift': 0x008d, 'up': 0x008e, 'num1': 0x0090, 'num2': 0x0092,
-    'num3': 0x00a7,
-    'lctrl': 0x01f5, 'fn': 0x007f, 'win': 0x0080, 'lalt': 0x0096,
-    'space': 0x0098, 'ralt': 0x009a, 'rctrl': 0x009b,
-    'left': 0x009c, 'down': 0x009d, 'right': 0x009f,
-    'num0': 0x00a3, 'numdot': 0x00a5, 'numenter': 0x00a7,
-    'enter': 0x0077,
-}
+KEY_NAMES = keyboard_model.by_code
 
 # WASD group
 KEY_GROUPS = {
