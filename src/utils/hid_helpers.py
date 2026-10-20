@@ -3,7 +3,7 @@ import glob
 import fcntl
 import array
 
-from src.constants import SUPPORTED_PIDS
+from constants import SUPPORTED_PIDS
 
 REPORT_SIZE = 960
 HIDIOCSFEATURE = lambda size: 0xC0004806 | (size << 16)
@@ -29,7 +29,7 @@ def find_spectrum_device():
     for hidraw in sorted(glob.glob('/sys/class/hidraw/hidraw*')):
         name = os.path.basename(hidraw)
         try:
-            with open(f'{hidraw}/device/uevent') as f:
+            with open(f'{hidraw}/device/uevent', encoding='utf-8') as f:
                 uevent = f.read()
             if '048D' not in uevent.upper():
                 continue
