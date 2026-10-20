@@ -20,9 +20,9 @@ import array
 import struct
 import glob
 
-from utils import is_pid_supported
 from models.legion_pro7_16iax10h import ZONES, MODEL
 from models import get_model_for_detected_pid
+from utils.hid_helpers import is_pid_supported, make_header, make_request
 
 keyboard_model = get_model_for_detected_pid('C197')
 
@@ -50,6 +50,8 @@ OP_AURORA_START_STOP = 0xD0
 OP_AURORA_SEND_BITMAP = 0xA1
 OP_GET_LOGO_STATUS  = 0xA5
 OP_LOGO_STATUS      = 0xA6
+
+
 
 # ---------------------------------------------------------------------------
 # Effect types
@@ -123,14 +125,6 @@ def get_feature(dev, report_id=0x07):
     buf = array.array('B', [report_id] + [0] * (REPORT_SIZE - 1))
     fcntl.ioctl(dev, HIDIOCGFEATURE(REPORT_SIZE), buf)
     return bytes(buf)
-
-
-def make_header(op_type, size=0xC0):
-    return bytes([0x07, op_type, size & 0xFF, 0x03])
-
-
-def make_request(op_type, payload=b'', size=0xC0):
-    return (make_header(op_type, size) + payload).ljust(REPORT_SIZE, b'\x00')
 
 # ---------------------------------------------------------------------------
 # Protocol operations
