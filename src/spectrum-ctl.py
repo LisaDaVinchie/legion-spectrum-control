@@ -123,7 +123,7 @@ def main():
             status(dev)
 
         elif cmd == 'off':
-            set_brightness(dev, 0)
+            lights_off(dev)
             print("All lights off")
 
         elif cmd == 'on':
@@ -151,14 +151,7 @@ def main():
             print(f"Logo: {'on' if on else 'off'}")
 
         elif cmd == 'info':
-            print(f"Compatible: {check_compatibility(dev)}")
-            rows, cols = get_key_count(dev)
-            print(f"Layout:     {cols}x{rows}")
-            print(f"Brightness: {get_brightness(dev)}/9")
-            print(f"Profile:    {get_profile(dev)}")
-            print(f"Logo:       {'on' if get_logo_status(dev) else 'off'}")
-            print(f"Keyboard:   {len(MODEL.keys_in_zone('keyboard'))} keys")
-            print(f"Perimeter:  {len(MODEL.keys_in_zone('perimeter'))} LEDs")
+            get_info(dev)
 
         elif cmd == 'preset':
             # preset EFFECT [zone1 zone2 ...] [color1 color2 ...] [--speed N] [--dir DIR]
@@ -286,6 +279,19 @@ def main():
         sys.exit(1)
     finally:
         dev.close()
+
+def get_info(dev):
+    print(f"Compatible: {check_compatibility(dev)}")
+    rows, cols = get_key_count(dev)
+    print(f"Layout:     {cols}x{rows}")
+    print(f"Brightness: {get_brightness(dev)}/9")
+    print(f"Profile:    {get_profile(dev)}")
+    print(f"Logo:       {'on' if get_logo_status(dev) else 'off'}")
+    print(f"Keyboard:   {len(MODEL.keys_in_zone('keyboard'))} keys")
+    print(f"Perimeter:  {len(MODEL.keys_in_zone('perimeter'))} LEDs")
+
+def lights_off(dev):
+    set_brightness(dev, 0)
 
 def status(dev):
     b = get_brightness(dev)
