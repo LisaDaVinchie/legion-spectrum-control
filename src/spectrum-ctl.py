@@ -30,7 +30,7 @@ from effects.commands import (
     cmd_multi, cmd_keys,
     DIRECTIONS, EFFECTS
 )
-from effects.presets import (white, stealth, rgb, lights_on)
+from effects.presets import (white, stealth, rgb, lights_on, lights_off)
 
 keyboard_model = get_model_for_detected_pid('C197')
 
@@ -289,9 +289,6 @@ def get_info(dev):
     print(f"Logo:       {'on' if get_logo_status(dev) else 'off'}")
     print(f"Keyboard:   {len(MODEL.keys_in_zone('keyboard'))} keys")
     print(f"Perimeter:  {len(MODEL.keys_in_zone('perimeter'))} LEDs")
-
-def lights_off(dev):
-    set_brightness(dev, 0)
 
 def status(dev):
     b = get_brightness(dev)

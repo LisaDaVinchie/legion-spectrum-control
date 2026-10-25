@@ -53,3 +53,6 @@ def lights_on(dev):
             ])
     set_brightness(dev, 9)
     set_logo_status(dev, True)
+
+def lights_off(dev):
+    set_brightness(dev, 0)
