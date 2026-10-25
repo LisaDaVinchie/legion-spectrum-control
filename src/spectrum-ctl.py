@@ -30,6 +30,7 @@ from effects.commands import (
     cmd_multi, cmd_keys,
     DIRECTIONS, EFFECTS
 )
+from effects.presets import (white, stealth, rgb)
 
 keyboard_model = get_model_for_detected_pid('C197')
 
@@ -296,45 +297,6 @@ def main():
         sys.exit(1)
     finally:
         dev.close()
-
-def white():
-    dev = open_device()
-    cmd_multi(dev, [
-            ('keyboard', 'static', [(255, 255, 255)], 0, 0, 0),
-            ('perimeter', 'static', [(0, 0, 0)], 0, 0, 0),
-            ('logo', 'static', [(0, 0, 0)], 0, 0, 0),
-        ])
-        # Make sure brightness is up
-    if get_brightness(dev) == 0:
-        set_brightness(dev, 3)
-    print("White keyboard, perimeter off")
-    dev.close()
-
-def rgb():
-    dev = open_device()
-    cmd_multi(dev, [
-            ('keyboard', 'rainbow-wave', [], 2, 4, 0),
-            ('perimeter', 'rainbow-wave', [], 2, 4, 0),
-            ('logo', 'color-pulse', [(128, 0, 255), (0, 128, 255)], 2, 0, 0),
-        ])
-    set_logo_status(dev, True)
-    if get_brightness(dev) == 0:
-        set_brightness(dev, 3)
-    print("Rainbow wave on all zones")
-    dev.close()
-
-def stealth():
-    dev = open_device()
-    cmd_multi(dev, [
-            ('keyboard', 'static', [(0, 0, 0)], 0, 0, 0),
-            ('perimeter', 'static', [(0, 0, 0)], 0, 0, 0),
-            ('logo', 'static', [(0, 0, 0)], 0, 0, 0),
-        ])
-    set_brightness(dev, 0)
-    set_logo_status(dev, False)
-    print("All lights off")
-    dev.close()
-
 
 if __name__ == '__main__':
     main()
