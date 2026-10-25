@@ -47,7 +47,7 @@ DIRECTIONS = {
 # ---------------------------------------------------------------------------
 # High-level commands
 # ---------------------------------------------------------------------------
-def resolve_zone_keys(zone_name):
+def _resolve_zone_keys(zone_name):
     """Resolve a zone name to a list of keycodes."""
     if zone_name in ZONES:
         return ZONES[zone_name]
@@ -104,7 +104,7 @@ def cmd_preset(dev, name, zones, colors, speed=2, direction=0, clockwise=0):
     effect_no = 1
 
     for zone_name in zones:
-        keys = resolve_zone_keys(zone_name)
+        keys = _resolve_zone_keys(zone_name)
         zone_colors = colors if colors else []
         # For static with no color specified, default white
         if name == 'static' and not zone_colors:
@@ -128,7 +128,7 @@ def cmd_multi(dev, zone_specs):
 
     for zone_name, ename, colors, speed, direction, clockwise in zone_specs:
         etype = EFFECTS[ename]
-        keys = resolve_zone_keys(zone_name)
+        keys = _resolve_zone_keys(zone_name)
         effects.append(build_effect(
             effect_no, etype, colors, keys,
             speed=speed, direction=direction, clockwise=clockwise,
