@@ -14,22 +14,19 @@ Zones:
 """
 
 import sys
-import struct
 
 from models.legion_pro7_16iax10h import ZONES, MODEL
 from models import get_model_for_detected_pid
-from utils.hid_helpers import (
-    make_header,
-    set_feature,
-    find_spectrum_device
-)
-
+from utils.hid_helpers import find_spectrum_device
 from utils.protocol_operations import (
     get_brightness, set_brightness,
     get_profile, set_profile, set_profile_default,
     get_logo_status, set_logo_status,
-    check_compatibility, get_key_count,
-    OP_EFFECT_CHANGE
+    check_compatibility, get_key_count
+)
+from effects.builder import (
+    build_effect,
+    send_effects,
 )
 
 keyboard_model = get_model_for_detected_pid('C197')
@@ -73,47 +70,6 @@ DIRECTIONS = {
     'right': 3,
     'left':  4,
 }
-
-# ---------------------------------------------------------------------------
-# Effect builder
-# ---------------------------------------------------------------------------
-def build_effect_header(effect_type, speed=0, direction=0, clockwise=0, color_mode=2):
-    return bytes([
-        0x06, 0x01, effect_type,
-        0x02, speed,
-        0x03, clockwise,
-        0x04, direction,
-        0x05, color_mode,
-        0x06, 0x00,
-    ])
-
-
-def build_effect(effect_no, effect_type, colors, keycodes,
-                 speed=0, direction=0, clockwise=0):
-    """Build a single effect binary blob."""
-    color_mode = 0x02 if colors else (0x01 if effect_type != 11 else 0x00)
-    header = build_effect_header(effect_type, speed, direction, clockwise, color_mode)
-
-    data = bytes([effect_no])
-    data += header
-    data += bytes([len(colors)])
-    for r, g, b in colors:
-        data += bytes([r, g, b])
-    data += bytes([len(keycodes)])
-    for kc in keycodes:
-        data += struct.pack('<H', kc)
-    return data
-
-
-def send_effects(dev, profile, effects_data):
-    """Send a full effect description to the device.
-    effects_data is a list of bytes blobs from build_effect().
-    """
-    payload = bytes([profile, 0x01, 0x01])
-    for e in effects_data:
-        payload += e
-    data = make_header(OP_EFFECT_CHANGE) + payload
-    set_feature(dev, data)
 
 # ---------------------------------------------------------------------------
 # High-level commands
