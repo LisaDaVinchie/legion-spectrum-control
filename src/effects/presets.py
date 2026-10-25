@@ -44,3 +44,12 @@ def stealth():
     set_logo_status(dev, False)
     print("All lights off")
     dev.close()
+
+def lights_on(dev):
+    cmd_multi(dev, [
+                ('keyboard', 'static', [(255, 255, 255)], 0, 0, 0),
+                ('perimeter', 'static', [(255, 255, 255)], 0, 0, 0),
+                ('logo', 'static', [(255, 255, 255)], 0, 0, 0),
+            ])
+    set_brightness(dev, 9)
+    set_logo_status(dev, True)
