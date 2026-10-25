@@ -10,7 +10,7 @@ from utils.protocol_operations import OP_EFFECT_CHANGE
 # ---------------------------------------------------------------------------
 # Effect builder
 # ---------------------------------------------------------------------------
-def build_effect_header(effect_type, speed=0, direction=0, clockwise=0, color_mode=2):
+def _build_effect_header(effect_type, speed=0, direction=0, clockwise=0, color_mode=2):
     return bytes([
         0x06, 0x01, effect_type,
         0x02, speed,
@@ -25,7 +25,7 @@ def build_effect(effect_no, effect_type, colors, keycodes,
                  speed=0, direction=0, clockwise=0):
     """Build a single effect binary blob."""
     color_mode = 0x02 if colors else (0x01 if effect_type != 11 else 0x00)
-    header = build_effect_header(effect_type, speed, direction, clockwise, color_mode)
+    header = _build_effect_header(effect_type, speed, direction, clockwise, color_mode)
 
     data = bytes([effect_no])
     data += header
