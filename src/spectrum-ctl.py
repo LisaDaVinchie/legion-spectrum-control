@@ -30,7 +30,7 @@ from effects.commands import (
     cmd_multi, cmd_keys,
     DIRECTIONS, EFFECTS
 )
-from effects.presets import (white, stealth, rgb)
+from effects.presets import (white, stealth, rgb, lights_on)
 
 keyboard_model = get_model_for_detected_pid('C197')
 
@@ -120,25 +120,14 @@ def main():
 
     try:
         if cmd == 'status':
-            b = get_brightness(dev)
-            p = get_profile(dev)
-            logo = get_logo_status(dev)
-            print(f"Brightness: {b}/9")
-            print(f"Profile:    {p}")
-            print(f"Logo:       {'on' if logo else 'off'}")
+            status(dev)
 
         elif cmd == 'off':
             set_brightness(dev, 0)
             print("All lights off")
 
         elif cmd == 'on':
-            cmd_multi(dev, [
-                ('keyboard', 'static', [(255, 255, 255)], 0, 0, 0),
-                ('perimeter', 'static', [(255, 255, 255)], 0, 0, 0),
-                ('logo', 'static', [(255, 255, 255)], 0, 0, 0),
-            ])
-            set_brightness(dev, 9)
-            set_logo_status(dev, True)
+            lights_on(dev)
             print("All lights on: full white, max brightness")
 
         elif cmd == 'brightness':
@@ -297,6 +286,14 @@ def main():
         sys.exit(1)
     finally:
         dev.close()
+
+def status(dev):
+    b = get_brightness(dev)
+    p = get_profile(dev)
+    logo = get_logo_status(dev)
+    print(f"Brightness: {b}/9")
+    print(f"Profile:    {p}")
+    print(f"Logo:       {'on' if logo else 'off'}")
 
 if __name__ == '__main__':
     main()
