@@ -122,11 +122,11 @@ def main(preset = None):
         if cmd == 'status':
             status(dev)
 
-        elif cmd == 'off':
+        elif preset == 'off':
             lights_off(dev)
             print("All lights off")
 
-        elif cmd == 'on':
+        elif preset == 'on':
             lights_on(dev)
             print("All lights on: full white, max brightness")
 
@@ -286,7 +286,7 @@ if __name__ == '__main__':
 
     p.add_argument(
         "--preset", type=str, default=None,
-        help="Color preset: white, rgb or stealth."
+        help="Color preset: on, off, white, rgb or stealth."
     )
 
     args = p.parse_args()
