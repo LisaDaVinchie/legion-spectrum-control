@@ -19,11 +19,10 @@ from models.legion_pro7_16iax10h import ZONES, MODEL
 from models import get_model_for_detected_pid
 from utils.protocol_operations import (
     get_brightness, set_brightness,
-    get_profile, set_profile, set_profile_default,
-    get_logo_status, set_logo_status,
-    check_compatibility, get_key_count
+    set_profile, set_profile_default, set_logo_status
 )
 from utils.cli_helpers import open_device, resolve_key
+from utils.checks import get_info, status
 
 from effects.commands import (
     parse_color, cmd_preset,
@@ -279,24 +278,6 @@ def main():
         sys.exit(1)
     finally:
         dev.close()
-
-def get_info(dev):
-    print(f"Compatible: {check_compatibility(dev)}")
-    rows, cols = get_key_count(dev)
-    print(f"Layout:     {cols}x{rows}")
-    print(f"Brightness: {get_brightness(dev)}/9")
-    print(f"Profile:    {get_profile(dev)}")
-    print(f"Logo:       {'on' if get_logo_status(dev) else 'off'}")
-    print(f"Keyboard:   {len(MODEL.keys_in_zone('keyboard'))} keys")
-    print(f"Perimeter:  {len(MODEL.keys_in_zone('perimeter'))} LEDs")
-
-def status(dev):
-    b = get_brightness(dev)
-    p = get_profile(dev)
-    logo = get_logo_status(dev)
-    print(f"Brightness: {b}/9")
-    print(f"Profile:    {p}")
-    print(f"Logo:       {'on' if logo else 'off'}")
 
 if __name__ == '__main__':
     main()
