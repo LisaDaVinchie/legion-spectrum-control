@@ -14,6 +14,7 @@ Zones:
 """
 
 import sys
+from argparse import ArgumentParser
 
 from models.legion_pro7_16iax10h import ZONES, MODEL
 from models import get_model_for_detected_pid
@@ -95,7 +96,7 @@ KEY_NAMES = keyboard_model.by_code
 KEY_GROUPS = MODEL.zones
 
 
-def main():
+def main(preset = None):
     if len(sys.argv) < 2:
         print_usage()
         sys.exit(0)
@@ -103,15 +104,15 @@ def main():
     cmd = sys.argv[1].lower()
 
     # Quick presets that don't need arg parsing
-    if cmd == 'white':
+    if preset == 'white':
         white()
         return
 
-    if cmd == 'rgb':
+    if preset == 'rgb':
         rgb()
         return
 
-    if cmd == 'stealth':
+    if preset == 'stealth':
         stealth()
         return
 
@@ -280,4 +281,13 @@ def main():
         dev.close()
 
 if __name__ == '__main__':
-    main()
+
+    p = ArgumentParser()
+
+    p.add_argument(
+        "--preset", type=str, default=None,
+        help="Color preset: white, rgb or stealth."
+    )
+
+    args = p.parse_args()
+    main(preset=args.preset)
