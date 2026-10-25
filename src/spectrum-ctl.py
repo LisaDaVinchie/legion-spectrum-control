@@ -18,8 +18,11 @@ import struct
 
 from models.legion_pro7_16iax10h import ZONES, MODEL
 from models import get_model_for_detected_pid
-from utils.hid_helpers import make_header, make_request
-from utils.lowlevel_hid_helpers import find_spectrum_device, set_feature, get_feature, REPORT_SIZE
+from utils.hid_helpers import (
+    make_header, make_request,
+    set_feature, get_feature,
+    find_spectrum_device, REPORT_SIZE
+)
 
 keyboard_model = get_model_for_detected_pid('C197')
 
