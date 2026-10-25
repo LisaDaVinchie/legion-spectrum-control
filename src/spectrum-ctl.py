@@ -17,13 +17,13 @@ import sys
 
 from models.legion_pro7_16iax10h import ZONES, MODEL
 from models import get_model_for_detected_pid
-from utils.hid_helpers import find_spectrum_device
 from utils.protocol_operations import (
     get_brightness, set_brightness,
     get_profile, set_profile, set_profile_default,
     get_logo_status, set_logo_status,
     check_compatibility, get_key_count
 )
+from utils.cli_helpers import open_device, resolve_key
 
 from effects.commands import (
     parse_color, cmd_preset,
@@ -95,26 +95,6 @@ KEY_NAMES = keyboard_model.by_code
 KEY_GROUPS = MODEL.zones
 
 
-def resolve_key(name):
-    """Resolve a key name/hex/group to a list of keycodes."""
-    name = name.lower().strip()
-    if name in KEY_GROUPS:
-        return [KEY_NAMES[k] for k in KEY_GROUPS[name]]
-    if name in KEY_NAMES:
-        return [KEY_NAMES[name]]
-    if name.startswith('0x'):
-        return [int(name, 16)]
-    raise ValueError(f"Unknown key: {name}. Use 'keymap' to see available names.")
-
-
-def open_device():
-    devpath = find_spectrum_device()
-    if not devpath:
-        print("ERROR: Spectrum device not found (048d:c197)")
-        sys.exit(1)
-    return open(devpath, 'rb+', buffering=0)
-
-
 def main():
     if len(sys.argv) < 2:
         print_usage()
@@ -124,44 +104,15 @@ def main():
 
     # Quick presets that don't need arg parsing
     if cmd == 'white':
-        dev = open_device()
-        cmd_multi(dev, [
-            ('keyboard', 'static', [(255, 255, 255)], 0, 0, 0),
-            ('perimeter', 'static', [(0, 0, 0)], 0, 0, 0),
-            ('logo', 'static', [(0, 0, 0)], 0, 0, 0),
-        ])
-        # Make sure brightness is up
-        if get_brightness(dev) == 0:
-            set_brightness(dev, 3)
-        print("White keyboard, perimeter off")
-        dev.close()
+        white()
         return
 
     if cmd == 'rgb':
-        dev = open_device()
-        cmd_multi(dev, [
-            ('keyboard', 'rainbow-wave', [], 2, 4, 0),
-            ('perimeter', 'rainbow-wave', [], 2, 4, 0),
-            ('logo', 'color-pulse', [(128, 0, 255), (0, 128, 255)], 2, 0, 0),
-        ])
-        set_logo_status(dev, True)
-        if get_brightness(dev) == 0:
-            set_brightness(dev, 3)
-        print("Rainbow wave on all zones")
-        dev.close()
+        rgb()
         return
 
     if cmd == 'stealth':
-        dev = open_device()
-        cmd_multi(dev, [
-            ('keyboard', 'static', [(0, 0, 0)], 0, 0, 0),
-            ('perimeter', 'static', [(0, 0, 0)], 0, 0, 0),
-            ('logo', 'static', [(0, 0, 0)], 0, 0, 0),
-        ])
-        set_brightness(dev, 0)
-        set_logo_status(dev, False)
-        print("All lights off")
-        dev.close()
+        stealth()
         return
 
     dev = open_device()
@@ -345,6 +296,44 @@ def main():
         sys.exit(1)
     finally:
         dev.close()
+
+def white():
+    dev = open_device()
+    cmd_multi(dev, [
+            ('keyboard', 'static', [(255, 255, 255)], 0, 0, 0),
+            ('perimeter', 'static', [(0, 0, 0)], 0, 0, 0),
+            ('logo', 'static', [(0, 0, 0)], 0, 0, 0),
+        ])
+        # Make sure brightness is up
+    if get_brightness(dev) == 0:
+        set_brightness(dev, 3)
+    print("White keyboard, perimeter off")
+    dev.close()
+
+def rgb():
+    dev = open_device()
+    cmd_multi(dev, [
+            ('keyboard', 'rainbow-wave', [], 2, 4, 0),
+            ('perimeter', 'rainbow-wave', [], 2, 4, 0),
+            ('logo', 'color-pulse', [(128, 0, 255), (0, 128, 255)], 2, 0, 0),
+        ])
+    set_logo_status(dev, True)
+    if get_brightness(dev) == 0:
+        set_brightness(dev, 3)
+    print("Rainbow wave on all zones")
+    dev.close()
+
+def stealth():
+    dev = open_device()
+    cmd_multi(dev, [
+            ('keyboard', 'static', [(0, 0, 0)], 0, 0, 0),
+            ('perimeter', 'static', [(0, 0, 0)], 0, 0, 0),
+            ('logo', 'static', [(0, 0, 0)], 0, 0, 0),
+        ])
+    set_brightness(dev, 0)
+    set_logo_status(dev, False)
+    print("All lights off")
+    dev.close()
 
 
 if __name__ == '__main__':
