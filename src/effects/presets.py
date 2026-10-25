@@ -4,12 +4,15 @@ from utils.protocol_operations import (
 from utils.cli_helpers import open_device
 from effects.commands import cmd_multi
 
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+
 def white():
     dev = open_device()
     cmd_multi(dev, [
-            ('keyboard', 'static', [(255, 255, 255)], 0, 0, 0),
-            ('perimeter', 'static', [(0, 0, 0)], 0, 0, 0),
-            ('logo', 'static', [(0, 0, 0)], 0, 0, 0),
+            ('keyboard', 'static', [WHITE], 0, 0, 0),
+            ('perimeter', 'static', [BLACK], 0, 0, 0),
+            ('logo', 'static', [BLACK], 0, 0, 0),
         ])
         # Make sure brightness is up
     if get_brightness(dev) == 0:
@@ -33,9 +36,9 @@ def rgb():
 def stealth():
     dev = open_device()
     cmd_multi(dev, [
-            ('keyboard', 'static', [(0, 0, 0)], 0, 0, 0),
-            ('perimeter', 'static', [(0, 0, 0)], 0, 0, 0),
-            ('logo', 'static', [(0, 0, 0)], 0, 0, 0),
+            ('keyboard', 'static', [BLACK], 0, 0, 0),
+            ('perimeter', 'static', [BLACK], 0, 0, 0),
+            ('logo', 'static', [BLACK], 0, 0, 0),
         ])
     set_brightness(dev, 0)
     set_logo_status(dev, False)
