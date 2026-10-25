@@ -14,24 +14,14 @@ Zones:
 """
 
 import sys
-import os
-import fcntl
-import array
 import struct
-import glob
 
 from models.legion_pro7_16iax10h import ZONES, MODEL
 from models import get_model_for_detected_pid
-from utils.hid_helpers import is_pid_supported, make_header, make_request
+from utils.hid_helpers import make_header, make_request
+from utils.lowlevel_hid_helpers import find_spectrum_device, set_feature, get_feature, REPORT_SIZE
 
 keyboard_model = get_model_for_detected_pid('C197')
-
-# ---------------------------------------------------------------------------
-# HID constants
-# ---------------------------------------------------------------------------
-HIDIOCSFEATURE = lambda size: 0xC0004806 | (size << 16)
-HIDIOCGFEATURE = lambda size: 0xC0004807 | (size << 16)
-REPORT_SIZE = 960
 
 # ---------------------------------------------------------------------------
 # Spectrum protocol operation types
@@ -91,40 +81,7 @@ DIRECTIONS = {
     'left':  4,
 }
 
-# ---------------------------------------------------------------------------
-# Low-level HID helpers
-# ---------------------------------------------------------------------------
-def find_spectrum_device():
-    """Find hidraw for 048d:c197 (ITE 8258) — the Spectrum protocol responder."""
-    for hidraw in sorted(glob.glob('/sys/class/hidraw/hidraw*')):
-        name = os.path.basename(hidraw)
-        try:
-            with open(f'{hidraw}/device/uevent') as f:
-                uevent = f.read()
-            if '048D' not in uevent.upper():
-                continue
 
-            if not is_pid_supported(uevent):
-                continue
-
-            with open(f'{hidraw}/device/report_descriptor', 'rb') as f:
-                desc = f.read()
-            if b'\x06\x89\xff' in desc:
-                return f'/dev/{name}'
-        except (IOError, OSError):
-            continue
-    return None
-
-
-def set_feature(dev, data):
-    buf = array.array('B', data[:REPORT_SIZE].ljust(REPORT_SIZE, b'\x00'))
-    fcntl.ioctl(dev, HIDIOCSFEATURE(REPORT_SIZE), buf)
-
-
-def get_feature(dev, report_id=0x07):
-    buf = array.array('B', [report_id] + [0] * (REPORT_SIZE - 1))
-    fcntl.ioctl(dev, HIDIOCGFEATURE(REPORT_SIZE), buf)
-    return bytes(buf)
 
 # ---------------------------------------------------------------------------
 # Protocol operations
