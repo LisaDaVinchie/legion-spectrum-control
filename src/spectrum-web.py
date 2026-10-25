@@ -16,7 +16,7 @@ import fcntl
 import glob as globmod
 import threading
 
-from utils import is_pid_supported
+from utils.hid_helpers import is_pid_supported
 
 PORT = 5555
 SCRIPT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'spectrum-ctl.py')
