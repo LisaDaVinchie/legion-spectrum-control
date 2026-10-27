@@ -102,22 +102,21 @@ def main():
 
     cmd = sys.argv[1].lower()
 
-    # Quick presets that don't need arg parsing
-    if cmd == 'white':
-        white()
-        return
-
-    if cmd == 'rgb':
-        rgb()
-        return
-
-    if cmd == 'stealth':
-        stealth()
-        return
 
     dev = open_device()
 
     try:
+        if cmd == 'white':
+            white(dev)
+            return
+
+        if cmd == 'rgb':
+            rgb(dev)
+            return
+
+        if cmd == 'stealth':
+            stealth(dev)
+            return
         if cmd == 'status':
             status(dev)
 
