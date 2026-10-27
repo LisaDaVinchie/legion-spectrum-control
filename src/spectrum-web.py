@@ -13,10 +13,8 @@ import os
 import struct
 import array
 import fcntl
-import glob as globmod
 import threading
 
-from utils.hid_helpers import is_pid_supported
 from utils.hid_helpers import find_spectrum_device
 
 PORT = 5555
