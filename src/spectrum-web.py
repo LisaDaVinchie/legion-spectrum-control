@@ -17,6 +17,7 @@ import glob as globmod
 import threading
 
 from utils.hid_helpers import is_pid_supported
+from utils.hid_helpers import find_spectrum_device
 
 PORT = 5555
 SCRIPT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'spectrum-ctl.py')
@@ -36,25 +37,7 @@ def _find_spectrum_hid():
     global _hid_path
     if _hid_path:
         return _hid_path
-    for hidraw in sorted(globmod.glob('/sys/class/hidraw/hidraw*')):
-        name = os.path.basename(hidraw)
-        try:
-            with open(f'{hidraw}/device/uevent') as f:
-                uevent = f.read()
-            if '048D' not in uevent.upper():
-                continue
-
-            if not is_pid_supported(uevent):
-                continue
-
-            with open(f'{hidraw}/device/report_descriptor', 'rb') as f:
-                desc = f.read()
-            if b'\x06\x89\xff' in desc:
-                _hid_path = f'/dev/{name}'
-                return _hid_path
-        except (IOError, OSError):
-            continue
-    return None
+    _hid_path = find_spectrum_device()
 
 def _hid_set_feature(fd, data):
     buf = array.array('B', data[:REPORT_SIZE].ljust(REPORT_SIZE, b'\x00'))
